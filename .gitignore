@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.vercel
+*.log
+*.tsbuildinfo
+.env*
+!.env.example
+
+# ローカル環境専用
+.claude/
+open-career-type.cmd
