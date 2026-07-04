@@ -21,11 +21,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Pagesが未有効の場合に自動で有効化する
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,7 +33,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # リポジトリ名をbasePathにする（ユーザーサイト <user>.github.io の場合はルート配信なので空にする）
       - name: Set base path
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
