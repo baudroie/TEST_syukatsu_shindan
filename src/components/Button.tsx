@@ -10,11 +10,11 @@ type CommonProps = {
 
 const styles = {
   primary:
-    "bg-ink text-white shadow-sm hover:bg-ink/90",
+    "voxel-btn voxel-btn-primary hover:bg-ink/90",
   secondary:
-    "border border-slate-200 bg-white text-ink shadow-sm hover:bg-slate-50 hover:border-slate-300",
+    "voxel-btn voxel-btn-secondary hover:bg-[#fff8e8]",
   ghost:
-    "text-slate-500 hover:bg-slate-100 hover:text-ink",
+    "voxel-btn-ghost hover:bg-slate-100 hover:text-ink",
 };
 
 function buttonClass({
@@ -23,7 +23,7 @@ function buttonClass({
   className = "",
 }: Omit<CommonProps, "children">) {
   return [
-    "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40",
+    "inline-flex items-center justify-center gap-2 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45",
     size === "large" ? "min-h-14 px-7 text-base" : "min-h-11 px-5 text-sm",
     styles[variant],
     className,

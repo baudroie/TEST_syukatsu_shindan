@@ -1,0 +1,22 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">キャリタイプ ロゴ</title>
+  <rect x="3" y="3" width="34" height="34" rx="9" fill="#FFFDF7"/>
+  <rect x="3" y="3" width="34" height="34" rx="9" stroke="#172033" stroke-width="2"/>
+
+  <rect x="9" y="9" width="9.5" height="9.5" rx="2.4" fill="#F6F1E7" stroke="#172033" stroke-width="1.3"/>
+  <rect x="21.5" y="9" width="9.5" height="9.5" rx="2.4" fill="#EDF2FF" stroke="#172033" stroke-width="1.3"/>
+  <rect x="9" y="21.5" width="9.5" height="9.5" rx="2.4" fill="#EAF9F4" stroke="#172033" stroke-width="1.3"/>
+  <rect x="21.5" y="21.5" width="9.5" height="9.5" rx="2.4" fill="#FFF2EA" stroke="#172033" stroke-width="1.3"/>
+
+  <circle cx="12.2" cy="12.2" r="1.15" fill="#3157C8"/>
+  <path d="M12.2 16H15.8" stroke="#3157C8" stroke-width="1.3" stroke-linecap="round"/>
+
+  <path d="M24.5 12.1H28.3" stroke="#2F9B7A" stroke-width="1.3" stroke-linecap="round"/>
+  <circle cx="28.3" cy="15.7" r="1.15" fill="#2F9B7A"/>
+
+  <circle cx="13.75" cy="26.25" r="2.1" fill="#FFD166" stroke="#172033" stroke-width="1.1"/>
+  <path d="M12.5 26.25H15" stroke="#172033" stroke-width="1" stroke-linecap="round"/>
+
+  <path d="M24.8 27.5L26.4 25.3L28.2 27.5" stroke="#D95D8F" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26.5 25.4V29.1" stroke="#D95D8F" stroke-width="1.35" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="診断ノート">
+  <rect x="13.5" y="9.5" width="37" height="45" rx="7.5" fill="#FFFDF7" stroke="#102247" stroke-width="3"/>
+  <path d="M22 9.5H42V17.5C42 19.1569 40.6569 20.5 39 20.5H25C23.3431 20.5 22 19.1569 22 17.5V9.5Z" fill="#F8C62D" stroke="#102247" stroke-width="3"/>
+  <path d="M24 31H41" stroke="#102247" stroke-width="3" stroke-linecap="round"/>
+  <path d="M24 40H36" stroke="#102247" stroke-width="3" stroke-linecap="round"/>
+  <path d="M42 36.5L46 40.5L54 30.5" stroke="#1359C9" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="22.5" cy="31" r="2.4" fill="#F8C62D"/>
+  <circle cx="22.5" cy="40" r="2.4" fill="#F8C62D"/>
+</svg>

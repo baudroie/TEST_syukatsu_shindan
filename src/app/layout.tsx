@@ -18,7 +18,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "キャリタイプ | 就活の強みをタイプから見つけよう",
+  title: "キャリタイプ | 就活タイプ診断",
   description:
     "30問の無料診断で、あなたの就活タイプと自己PR・面接に使える強みを見つけます。",
 };
@@ -36,11 +36,6 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-canvas font-sans">
         <Header />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-slate-200/70">
-          <div className="mx-auto max-w-6xl px-5 py-8 text-center text-xs font-medium text-slate-400 sm:px-8">
-            © 2026 キャリタイプ
-          </div>
-        </footer>
       </body>
     </html>
   );

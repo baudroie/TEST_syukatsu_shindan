@@ -21,10 +21,13 @@ import {
 import { Button, ButtonLink } from "@/components/Button";
 import { ResultCharacter } from "@/components/ResultCharacter";
 import { resultMessages } from "@/lib/diagnosis/resultMessages";
+import {
+  ANSWERS_KEY,
+  LEAD_KEY,
+  RESULT_KEY,
+  SUBMISSION_STATUS_KEY,
+} from "@/lib/diagnosis/storage";
 import type { DiagnosisResult } from "@/lib/diagnosis/types";
-
-const ANSWERS_KEY = "career-type-answers";
-const RESULT_KEY = "career-type-result";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -45,7 +48,9 @@ export default function ResultPage() {
 
   function restartDiagnosis() {
     window.localStorage.removeItem(ANSWERS_KEY);
+    window.localStorage.removeItem(LEAD_KEY);
     window.localStorage.removeItem(RESULT_KEY);
+    window.localStorage.removeItem(SUBMISSION_STATUS_KEY);
     router.push("/diagnosis");
   }
 
@@ -73,8 +78,8 @@ export default function ResultPage() {
   const sub = resultMessages[result.subType];
 
   return (
-    <div className="bg-canvas pb-16">
-      <div className="border-b border-slate-200/70 bg-white/90 backdrop-blur">
+    <div className="voxel-shell pb-16">
+      <div className="border-b-2 border-[#172033]/10 bg-[#fffdf7]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-center gap-3 px-5 py-4 text-xs font-medium text-slate-400 sm:justify-end sm:px-8">
           <span className="flex items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 font-display">
@@ -100,21 +105,21 @@ export default function ResultPage() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-8">
-        <section className="overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
+        <section className="voxel-panel overflow-hidden">
           <div className="grid min-h-[330px] items-end gap-2 px-5 pt-8 sm:px-10 lg:grid-cols-[0.9fr_1.5fr_0.65fr]">
             <ResultCharacter
               type={result.mainType}
-              className="mx-auto aspect-[0.92] w-full max-w-[300px] self-end rounded-t-[3rem]"
+              className="voxel-icon-stage mx-auto mb-8 aspect-square w-full max-w-[280px] self-center rounded-lg lg:mb-0"
             />
 
             <div className="self-center pb-9 text-center lg:pb-12">
-              <p className="font-display text-xs font-medium uppercase tracking-widest text-slate-400">
+              <p className="voxel-chip mx-auto inline-flex px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-slate-500">
                 Your Result
               </p>
               <p className="mt-5 text-sm font-medium text-slate-500">
                 あなたのメインタイプは
               </p>
-              <h1 className="mt-2 font-palt text-4xl font-bold tracking-tight text-ink sm:text-6xl lg:text-7xl">
+              <h1 className="voxel-title mt-3 font-palt text-4xl font-black tracking-tight text-ink sm:text-6xl lg:text-7xl">
                 {main.name}
               </h1>
               <p className="mt-4 text-lg font-semibold text-indigo-600 sm:text-2xl">
@@ -122,14 +127,14 @@ export default function ResultPage() {
               </p>
               <div className="mx-auto mt-6 flex w-fit items-center gap-3">
                 <span className="h-px w-10 bg-slate-200" />
-                <span className="rounded-lg border border-slate-200/70 bg-white px-5 py-2 text-sm font-semibold tracking-wider text-slate-600">
+                <span className="voxel-chip px-5 py-2 text-sm font-bold tracking-wider text-slate-600">
                   {main.shortName}
                 </span>
                 <span className="h-px w-10 bg-slate-200" />
               </div>
             </div>
 
-            <div className="mb-12 hidden self-center justify-self-center text-center lg:block">
+            <div className="voxel-card mb-12 hidden self-center justify-self-center bg-white p-5 text-center lg:block">
               <p className="font-display text-xs font-medium uppercase tracking-widest text-slate-400">
                 Sub Type
               </p>
@@ -145,7 +150,7 @@ export default function ResultPage() {
           </div>
         </section>
 
-        <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm">
+        <section className="voxel-panel mt-8 overflow-hidden">
           <div className="grid lg:grid-cols-2">
             <ResultPanel
               title="あなたの強み"
@@ -242,7 +247,7 @@ export default function ResultPage() {
           </div>
         </section>
 
-        <section className="mt-6">
+        <section className="mt-8">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <ButtonLink
               href="/self-pr"
@@ -301,9 +306,9 @@ function ResultPanel({
   children: React.ReactNode;
 }) {
   return (
-    <section className={`p-6 sm:p-8 ${className}`}>
+    <section className={`bg-white/70 p-6 sm:p-8 ${className}`}>
       <h2 className="mb-6 flex items-center gap-3 text-lg font-semibold text-ink">
-        <span className="text-slate-400">{icon}</span>
+        <span className="voxel-chip p-2 text-indigo-600">{icon}</span>
         {title}
       </h2>
       {children}
@@ -321,9 +326,9 @@ function ReportColumn({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-b border-slate-200/60 p-6 text-sm leading-7 text-slate-600 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
+    <section className="border-b border-slate-200/60 bg-white/75 p-6 text-sm leading-7 text-slate-600 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
       <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-ink">
-        <span className="text-slate-400">{icon}</span>
+        <span className="voxel-chip p-1.5 text-indigo-600">{icon}</span>
         {title}
       </h2>
       {children}

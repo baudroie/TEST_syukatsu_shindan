@@ -14,14 +14,14 @@ export function DiagnosisQuestion({
 }) {
   return (
     <section>
-      <h1 className="mx-auto max-w-3xl text-balance text-center text-2xl font-semibold leading-relaxed tracking-tight text-ink sm:text-3xl">
+      <h1 className="voxel-title mx-auto max-w-3xl text-balance text-center text-2xl font-black leading-relaxed tracking-tight text-ink sm:text-3xl">
         {question.question}
       </h1>
       <p className="mt-3 text-center text-sm text-slate-400">
         深く考えすぎず、普段の自分に近いものを選んでください
       </p>
 
-      <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-3">
+      <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-4">
         {question.options.map((answer, index) => {
           const selected = selectedOption === index;
           return (
@@ -30,14 +30,14 @@ export function DiagnosisQuestion({
               type="button"
               onClick={() => onSelect(index)}
               aria-pressed={selected}
-              className={`flex min-h-16 w-full items-center gap-4 rounded-xl border px-5 py-4 text-left text-sm font-medium leading-relaxed transition-colors duration-150 sm:px-6 sm:text-base ${
+              className={`voxel-card flex min-h-16 w-full items-center gap-4 px-5 py-4 text-left text-sm font-bold leading-relaxed transition-all duration-150 sm:px-6 sm:text-base ${
                 selected
-                  ? "border-indigo-600 bg-indigo-50 text-ink"
-                  : "border-slate-200/70 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                  ? "border-indigo-700 bg-[#eef0ff] text-ink shadow-[0_3px_0_rgba(79,103,255,0.38)]"
+                  : "border-slate-200/70 bg-white text-slate-600 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-[#fffdf7]"
               }`}
             >
               <span
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${
                   selected
                     ? "border-indigo-600 bg-indigo-600 text-white"
                     : "border-slate-300 bg-white"

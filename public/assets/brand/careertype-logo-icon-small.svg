@@ -1,0 +1,12 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="キャリタイプ">
+  <rect width="48" height="48" rx="12" fill="#FFFDF7"/>
+  <path d="M10 7H22V21.5H7V10C7 8.34315 8.34315 7 10 7Z" fill="#102247"/>
+  <path d="M26 7H38C39.6569 7 41 8.34315 41 10V21.5H26V7Z" fill="#2667DB"/>
+  <path d="M7 26.5H22V41H10C8.34315 41 7 39.6569 7 38V26.5Z" fill="#F45F54"/>
+  <path d="M26 26.5H41V38C41 39.6569 39.6569 41 38 41H26V26.5Z" fill="#F7C734"/>
+  <path d="M24 8V40" stroke="#FFFDF7" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M8 24H40" stroke="#FFFDF7" stroke-width="3.4" stroke-linecap="round"/>
+  <circle cx="24" cy="24" r="12.3" fill="#FFFDF7"/>
+  <path d="M18.4 29.6L21.8 21.8L29.6 18.4L26.2 26.2L18.4 29.6Z" fill="#102247" stroke="#102247" stroke-linejoin="round"/>
+  <circle cx="24.1" cy="24.1" r="2.1" fill="#FFFDF7"/>
+</svg>

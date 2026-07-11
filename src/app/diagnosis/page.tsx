@@ -1,63 +1,207 @@
-import { ArrowRight, CheckCircle2, Clock3, RotateCcw } from "lucide-react";
-import { ButtonLink } from "@/components/Button";
-import { Card } from "@/components/Card";
+"use client";
 
-const points = [
-  "全30問、直感に近い回答でOK",
-  "メインタイプとサブタイプを判定",
-  "自己PR・ガクチカ・面接のヒントを表示",
-  "回答内容は端末内にのみ一時保存",
-];
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, ClipboardCheck } from "lucide-react";
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { TermsContent } from "@/components/TermsContent";
+import { ANSWERS_KEY, LEAD_KEY, RESULT_KEY } from "@/lib/diagnosis/storage";
+import type { LeadFormData } from "@/lib/diagnosis/submission";
+
+const genderOptions = ["男性", "女性", "その他", "回答しない"];
+
+const initialForm = {
+  fullName: "",
+  phone: "",
+  email: "",
+  gender: "",
+  termsAccepted: false,
+};
 
 export default function DiagnosisStartPage() {
+  const router = useRouter();
+  const [form, setForm] = useState(initialForm);
+  const [error, setError] = useState("");
+
+  function updateField(
+    field: keyof typeof initialForm,
+    value: string | boolean,
+  ) {
+    setForm((current) => ({ ...current, [field]: value }));
+    if (error) setError("");
+  }
+
+  function validateForm() {
+    if (!form.fullName.trim()) return "氏名を入力してください。";
+    if (!form.phone.trim()) return "電話番号を入力してください。";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      return "メールアドレスを正しく入力してください。";
+    }
+    if (!form.gender) return "性別を選択してください。";
+    if (!form.termsAccepted) {
+      return "利用規約および個人情報の取扱いへの同意が必要です。";
+    }
+    return "";
+  }
+
+  function submitLead(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const validationError = validateForm();
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const lead: LeadFormData = {
+      fullName: form.fullName.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim(),
+      gender: form.gender,
+      termsAccepted: true,
+      agreedAt: now,
+      createdAt: now,
+    };
+
+    window.localStorage.setItem(LEAD_KEY, JSON.stringify(lead));
+    window.localStorage.removeItem(ANSWERS_KEY);
+    window.localStorage.removeItem(RESULT_KEY);
+    router.push("/diagnosis/questions");
+  }
+
   return (
-    <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8 sm:py-20">
-      <div className="text-center">
-        <p className="font-display text-xs font-medium uppercase tracking-widest text-slate-400">
+    <div className="voxel-shell mx-auto max-w-5xl overflow-hidden px-5 py-12 sm:px-8 sm:py-20">
+      <div className="min-w-0 text-center">
+        <p className="voxel-chip mx-auto inline-flex px-4 py-1.5 font-display text-xs font-bold uppercase tracking-widest text-slate-500">
           Career Type Diagnosis
         </p>
-        <h1 className="mt-4 text-balance font-palt text-3xl font-bold tracking-tight text-ink sm:text-5xl">
-          あなたらしい強みを、
+        <h1 className="voxel-title mt-4 text-balance font-palt text-3xl font-black tracking-tight text-ink sm:text-5xl">
+          診断の前に、
           <br />
-          30問から見つけよう。
+          内容をご確認ください。
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600">
-          正解や良い回答はありません。就活で見せたい自分ではなく、
-          普段の行動に近いものを選ぶと、あなたらしい結果につながります。
+        <p className="mx-auto mt-6 max-w-2xl break-words text-base leading-8 text-slate-600">
+          キャリタイプをご利用いただく前に、以下の内容をご確認ください。
+          内容に同意いただいた場合のみ、診断を開始できます。
         </p>
       </div>
 
-      <Card className="mx-auto mt-12 max-w-2xl p-6 sm:p-10">
-        <div className="flex items-center gap-4 border-b border-slate-200/60 pb-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-            <Clock3 size={24} />
+      <div className="mx-auto mt-12 grid max-w-4xl gap-6 lg:grid-cols-[1fr_0.92fr]">
+        <Card className="min-w-0 p-6 sm:p-8">
+          <div className="mb-6 flex items-center gap-4 border-b border-slate-200/70 pb-5">
+            <div className="voxel-icon-stage flex h-12 w-12 shrink-0 items-center justify-center rounded-lg text-indigo-600">
+              <ClipboardCheck size={23} />
+            </div>
+            <div>
+              <h2 className="text-lg font-black text-ink">
+                診断エントリーフォーム
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-slate-500">
+                すべての項目を入力すると質問に進めます。
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold text-ink">所要時間：約5分</p>
-            <p className="mt-1 text-sm text-slate-500">登録不要・無料で利用できます</p>
-          </div>
-        </div>
-        <ul className="mt-6 space-y-4">
-          {points.map((point) => (
-            <li key={point} className="flex items-start gap-3 text-sm text-slate-600">
-              <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-indigo-600" />
-              {point}
-            </li>
-          ))}
-        </ul>
-        <ButtonLink
-          href="/diagnosis/questions"
-          size="large"
-          className="mt-8 w-full"
-        >
-          診断を開始する
-          <ArrowRight size={19} />
-        </ButtonLink>
-      </Card>
 
-      <div className="mt-6 flex justify-center gap-2 text-xs text-slate-400">
-        <RotateCcw size={15} />
-        途中で閉じても、このブラウザで続きから再開できます
+          <form className="space-y-5" onSubmit={submitLead}>
+            <label className="lead-field">
+              <span>氏名</span>
+              <input
+                value={form.fullName}
+                onChange={(event) => updateField("fullName", event.target.value)}
+                className="lead-input"
+                autoComplete="name"
+                placeholder="山田 太郎"
+              />
+            </label>
+
+            <label className="lead-field">
+              <span>電話番号</span>
+              <input
+                value={form.phone}
+                onChange={(event) => updateField("phone", event.target.value)}
+                className="lead-input"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder="09012345678"
+              />
+            </label>
+
+            <label className="lead-field">
+              <span>メールアドレス</span>
+              <input
+                value={form.email}
+                onChange={(event) => updateField("email", event.target.value)}
+                className="lead-input"
+                autoComplete="email"
+                inputMode="email"
+                placeholder="example@mail.com"
+              />
+            </label>
+
+            <label className="lead-field">
+              <span>性別</span>
+              <select
+                value={form.gender}
+                onChange={(event) => updateField("gender", event.target.value)}
+                className="lead-input"
+              >
+                <option value="">選択してください</option>
+                {genderOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="lead-consent">
+              <input
+                type="checkbox"
+                checked={form.termsAccepted}
+                onChange={(event) =>
+                  updateField("termsAccepted", event.target.checked)
+                }
+              />
+              <span>
+                上記の利用規約および個人情報の取扱いに同意します。
+              </span>
+            </label>
+
+            <p className="rounded-[10px] bg-[#fff8e8] px-4 py-3 text-xs font-bold leading-6 text-[#647086]">
+              同意後も、診断を開始する前であればブラウザを閉じて中止できます。
+            </p>
+
+            {error ? (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+                {error}
+              </p>
+            ) : null}
+
+            <Button
+              type="submit"
+              size="large"
+              className="w-full"
+              disabled={!form.termsAccepted}
+            >
+              同意して診断をはじめる
+              <ArrowRight size={19} />
+            </Button>
+          </form>
+        </Card>
+
+        <aside className="voxel-panel h-fit p-6 sm:p-7">
+          <h2 className="text-lg font-black text-ink">
+            利用規約と個人情報の取扱いについて
+          </h2>
+          <p className="mt-3 text-sm font-bold leading-7 text-[#647086]">
+            重要事項を先に要点で確認し、詳細は下の小さなウィンドウでスクロールして読めます。
+          </p>
+          <div className="mt-5">
+            <TermsContent compact />
+          </div>
+        </aside>
       </div>
     </div>
   );
