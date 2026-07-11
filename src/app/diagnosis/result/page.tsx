@@ -29,9 +29,24 @@ import {
 } from "@/lib/diagnosis/storage";
 import type { DiagnosisResult } from "@/lib/diagnosis/types";
 
+type SubmissionStatus = {
+  status:
+    | "lead_pending"
+    | "lead_sent"
+    | "lead_failed"
+    | "pending"
+    | "sent"
+    | "failed"
+    | "not_configured";
+  reason?: string;
+  updatedAt?: string;
+};
+
 export default function ResultPage() {
   const router = useRouter();
   const [result, setResult] = useState<DiagnosisResult | null>(null);
+  const [submissionStatus, setSubmissionStatus] =
+    useState<SubmissionStatus | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -43,6 +58,21 @@ export default function ResultPage() {
         window.localStorage.removeItem(RESULT_KEY);
       }
     }
+
+    const savedSubmissionStatus = window.localStorage.getItem(
+      SUBMISSION_STATUS_KEY,
+    );
+
+    if (savedSubmissionStatus) {
+      try {
+        setSubmissionStatus(
+          JSON.parse(savedSubmissionStatus) as SubmissionStatus,
+        );
+      } catch {
+        window.localStorage.removeItem(SUBMISSION_STATUS_KEY);
+      }
+    }
+
     setLoaded(true);
   }, []);
 
@@ -248,6 +278,18 @@ export default function ResultPage() {
         </section>
 
         <section className="mt-8">
+          {submissionStatus &&
+          ["failed", "lead_failed", "not_configured"].includes(
+            submissionStatus.status,
+          ) ? (
+            <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-7 text-amber-800">
+              管理者向けメモ: Googleスプレッドシートへの送信設定を確認してください。
+              {submissionStatus.reason ? (
+                <span className="ml-1">理由: {submissionStatus.reason}</span>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <ButtonLink
               href="/self-pr"

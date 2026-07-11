@@ -34,6 +34,20 @@ NEXT_PUBLIC_GOOGLE_SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/xxxxxxx
 
 ## 4. GitHub Pagesで使う
 
+方法A: 公開設定ファイルで設定する
+
+[public/runtime-config.json](public/runtime-config.json) に、デプロイしたWebアプリURLを設定します。
+
+```json
+{
+  "googleSheetsWebhookUrl": "https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxxx/exec"
+}
+```
+
+このURLはブラウザから送信するため、クライアント側に公開されます。Apps Script側で保存先シート以外の処理を行わないようにしてください。
+
+方法B: GitHub Actions Secretで設定する
+
 GitHubリポジトリの Settings → Secrets and variables → Actions → New repository secret で以下を追加します。
 
 ```text
@@ -42,6 +56,8 @@ Value: https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxxx/exec
 ```
 
 その後、`main` ブランチへpushすると、GitHub Actionsのビルド時にURLが埋め込まれます。
+
+アプリはまず `NEXT_PUBLIC_GOOGLE_SHEETS_WEBHOOK_URL` を参照し、未設定の場合は `/runtime-config.json` の `googleSheetsWebhookUrl` を参照します。
 
 ## 送信される内容
 

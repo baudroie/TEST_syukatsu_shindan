@@ -48,6 +48,31 @@ export function getGoogleSheetsWebhookUrl() {
   return (process.env.NEXT_PUBLIC_GOOGLE_SHEETS_WEBHOOK_URL ?? "").trim();
 }
 
+async function getRuntimeGoogleSheetsWebhookUrl() {
+  if (typeof window === "undefined") return "";
+
+  try {
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+    const response = await fetch(`${basePath}/runtime-config.json`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) return "";
+
+    const config = (await response.json()) as {
+      googleSheetsWebhookUrl?: string;
+    };
+
+    return (config.googleSheetsWebhookUrl ?? "").trim();
+  } catch {
+    return "";
+  }
+}
+
+async function resolveGoogleSheetsWebhookUrl() {
+  return getGoogleSheetsWebhookUrl() || (await getRuntimeGoogleSheetsWebhookUrl());
+}
+
 export function buildDiagnosisSubmissionPayload({
   lead,
   answers,
@@ -103,7 +128,7 @@ export function buildLeadSubmissionPayload(
 async function postToGoogleSheets(
   payload: DiagnosisSubmissionPayload | LeadSubmissionPayload,
 ) {
-  const webhookUrl = getGoogleSheetsWebhookUrl();
+  const webhookUrl = await resolveGoogleSheetsWebhookUrl();
 
   if (!webhookUrl) {
     return {
