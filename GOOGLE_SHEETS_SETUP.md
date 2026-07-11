@@ -45,6 +45,9 @@ Value: https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxxx/exec
 
 ## 送信される内容
 
+診断開始フォームの送信時に、氏名・電話番号・メールアドレス・性別・同意日時を `lead_entry` として保存します。  
+30問回答後には、診断結果と回答内容を含めて `diagnosis_result` として再度保存します。
+
 - 氏名
 - 電話番号
 - メールアドレス

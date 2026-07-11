@@ -19,6 +19,7 @@ export type LeadFormData = {
 export type DiagnosisSubmissionPayload = {
   submittedAt: string;
   sheetId: string;
+  eventType: "diagnosis_result";
   sourceUrl: string;
   userAgent: string;
   lead: LeadFormData;
@@ -32,6 +33,15 @@ export type DiagnosisSubmissionPayload = {
     selectedOptionIndex: number | null;
     selectedOptionText: string;
   }>;
+};
+
+export type LeadSubmissionPayload = {
+  submittedAt: string;
+  sheetId: string;
+  eventType: "lead_entry";
+  sourceUrl: string;
+  userAgent: string;
+  lead: LeadFormData;
 };
 
 export function getGoogleSheetsWebhookUrl() {
@@ -50,6 +60,7 @@ export function buildDiagnosisSubmissionPayload({
   return {
     submittedAt: new Date().toISOString(),
     sheetId: GOOGLE_SHEET_ID,
+    eventType: "diagnosis_result",
     sourceUrl: typeof window === "undefined" ? "" : window.location.href,
     userAgent: typeof navigator === "undefined" ? "" : navigator.userAgent,
     lead,
@@ -76,8 +87,21 @@ export function buildDiagnosisSubmissionPayload({
   };
 }
 
-export async function submitDiagnosisToGoogleSheets(
-  payload: DiagnosisSubmissionPayload,
+export function buildLeadSubmissionPayload(
+  lead: LeadFormData,
+): LeadSubmissionPayload {
+  return {
+    submittedAt: new Date().toISOString(),
+    sheetId: GOOGLE_SHEET_ID,
+    eventType: "lead_entry",
+    sourceUrl: typeof window === "undefined" ? "" : window.location.href,
+    userAgent: typeof navigator === "undefined" ? "" : navigator.userAgent,
+    lead,
+  };
+}
+
+async function postToGoogleSheets(
+  payload: DiagnosisSubmissionPayload | LeadSubmissionPayload,
 ) {
   const webhookUrl = getGoogleSheetsWebhookUrl();
 
@@ -102,4 +126,14 @@ export async function submitDiagnosisToGoogleSheets(
     ok: true,
     reason: "sent" as const,
   };
+}
+
+export async function submitDiagnosisToGoogleSheets(
+  payload: DiagnosisSubmissionPayload,
+) {
+  return postToGoogleSheets(payload);
+}
+
+export async function submitLeadToGoogleSheets(payload: LeadSubmissionPayload) {
+  return postToGoogleSheets(payload);
 }

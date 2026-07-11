@@ -6,8 +6,17 @@ import { ArrowRight, ClipboardCheck } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { TermsContent } from "@/components/TermsContent";
-import { ANSWERS_KEY, LEAD_KEY, RESULT_KEY } from "@/lib/diagnosis/storage";
-import type { LeadFormData } from "@/lib/diagnosis/submission";
+import {
+  ANSWERS_KEY,
+  LEAD_KEY,
+  RESULT_KEY,
+  SUBMISSION_STATUS_KEY,
+} from "@/lib/diagnosis/storage";
+import {
+  buildLeadSubmissionPayload,
+  submitLeadToGoogleSheets,
+  type LeadFormData,
+} from "@/lib/diagnosis/submission";
 
 const genderOptions = ["男性", "女性", "その他", "回答しない"];
 
@@ -23,6 +32,7 @@ export default function DiagnosisStartPage() {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function updateField(
     field: keyof typeof initialForm,
@@ -45,8 +55,10 @@ export default function DiagnosisStartPage() {
     return "";
   }
 
-  function submitLead(event: FormEvent<HTMLFormElement>) {
+  async function submitLead(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isSubmitting) return;
+
     const validationError = validateForm();
 
     if (validationError) {
@@ -68,6 +80,41 @@ export default function DiagnosisStartPage() {
     window.localStorage.setItem(LEAD_KEY, JSON.stringify(lead));
     window.localStorage.removeItem(ANSWERS_KEY);
     window.localStorage.removeItem(RESULT_KEY);
+    window.localStorage.setItem(
+      SUBMISSION_STATUS_KEY,
+      JSON.stringify({
+        status: "lead_pending",
+        updatedAt: new Date().toISOString(),
+      }),
+    );
+
+    setIsSubmitting(true);
+
+    try {
+      const submission = await submitLeadToGoogleSheets(
+        buildLeadSubmissionPayload(lead),
+      );
+
+      window.localStorage.setItem(
+        SUBMISSION_STATUS_KEY,
+        JSON.stringify({
+          status: submission.ok ? "lead_sent" : "not_configured",
+          reason: submission.reason,
+          updatedAt: new Date().toISOString(),
+        }),
+      );
+    } catch (sendError) {
+      window.localStorage.setItem(
+        SUBMISSION_STATUS_KEY,
+        JSON.stringify({
+          status: "lead_failed",
+          reason:
+            sendError instanceof Error ? sendError.message : "unknown_error",
+          updatedAt: new Date().toISOString(),
+        }),
+      );
+    }
+
     router.push("/diagnosis/questions");
   }
 
@@ -183,9 +230,9 @@ export default function DiagnosisStartPage() {
               type="submit"
               size="large"
               className="w-full"
-              disabled={!form.termsAccepted}
+              disabled={!form.termsAccepted || isSubmitting}
             >
-              同意して診断をはじめる
+              {isSubmitting ? "送信中..." : "同意して診断をはじめる"}
               <ArrowRight size={19} />
             </Button>
           </form>

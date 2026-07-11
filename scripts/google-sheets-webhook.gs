@@ -4,6 +4,7 @@ const SHEET_NAME = "回答";
 const HEADERS = [
   "受信日時",
   "送信日時",
+  "送信種別",
   "氏名",
   "電話番号",
   "メールアドレス",
@@ -47,6 +48,7 @@ function doPost(e) {
     sheet.appendRow([
       new Date(),
       payload.submittedAt || "",
+      payload.eventType || "",
       lead.fullName || "",
       lead.phone || "",
       lead.email || "",
@@ -84,11 +86,11 @@ function getOrCreateSheet_(spreadsheet, name) {
 
 function ensureHeaders_(sheet) {
   const firstRow = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
-  const hasHeaders = firstRow.some(function (value) {
-    return value;
+  const shouldUpdateHeaders = HEADERS.some(function (header, index) {
+    return firstRow[index] !== header;
   });
 
-  if (!hasHeaders) {
+  if (shouldUpdateHeaders) {
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
     sheet.setFrozenRows(1);
   }
